@@ -5,7 +5,9 @@ using System.Text;
 
 namespace RSDInternetBanking.BLL
 {
-    class User
+    public class User
     {
+        public Card bankcard;
+
     }
 }

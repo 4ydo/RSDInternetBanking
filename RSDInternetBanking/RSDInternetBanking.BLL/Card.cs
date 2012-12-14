@@ -14,6 +14,7 @@ namespace RSDInternetBanking.BLL
         public DateTime dateexp { get; private set; }
         public string lastname { get; private set; }
         public string firstname { get; private set; }
+        public List<CardOperation> history { get; private set; }
 
 
         public Card()
