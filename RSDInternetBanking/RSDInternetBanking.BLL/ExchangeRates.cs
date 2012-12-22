@@ -7,8 +7,7 @@ namespace RSDInternetBanking.BLL
 {
     public static class ExchangeRates
     {
-        public Dictionary<string, double> rates { get; private set; } //написать
-        //может перечисление какое. Пара ISO4217 Iso4217 + курс
+        public List<ExchangeRateNode> rates;
 
     }
 }

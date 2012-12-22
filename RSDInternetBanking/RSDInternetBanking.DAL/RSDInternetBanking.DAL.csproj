@@ -40,9 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archive.cs" />
     <Compile Include="Exchange.cs" />
     <Compile Include="Loginization.cs" />
-    <Compile Include="OperationHistoryRW.cs" />
+    <Compile Include="CardOperationRW.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CardRW.cs" />
   </ItemGroup>

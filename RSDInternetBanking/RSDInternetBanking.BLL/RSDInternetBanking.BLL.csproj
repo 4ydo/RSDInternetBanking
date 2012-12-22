@@ -43,6 +43,7 @@
     <Compile Include="Admin.cs" />
     <Compile Include="CardOperation.cs" />
     <Compile Include="CardType.cs" />
+    <Compile Include="ExchangeRateNode.cs" />
     <Compile Include="ExchangeRates.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Parser.cs" />
