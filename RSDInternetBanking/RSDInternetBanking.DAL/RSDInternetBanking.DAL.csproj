@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archive.cs" />
+    <Compile Include="Connection.cs" />
     <Compile Include="Exchange.cs" />
     <Compile Include="Loginization.cs" />
     <Compile Include="CardOperationRW.cs" />

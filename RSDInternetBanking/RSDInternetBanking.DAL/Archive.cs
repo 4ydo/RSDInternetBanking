@@ -8,14 +8,14 @@ namespace RSDInternetBanking.DAL
 {
     public static class Archive  
     {
-        public static Dictionary<string, string> GetCardInfo()
+        public static Dictionary<string, string> GetCardInfo(SqlConnection connect)
         {
             return null; 
         }
 
         public static string AddCard( Dictionary<string, string> _cardinfo, SqlConnection connect)
         {           
-            SqlCommand com = new SqlCommand("SELECT * FROM CardInfoArchive WHERE cnum =" + _cardinfo["cnum"], connect);
+            SqlCommand com = new SqlCommand("SELECT * FROM CardInfoArchive WHERE cnum ='" + _cardinfo["cnum"]+"'", connect);
             var r = com.ExecuteScalar();
             if (r == null)
             {
@@ -41,7 +41,7 @@ namespace RSDInternetBanking.DAL
 
         public static string AddOperation(Dictionary<string, string> _oprtninfo, SqlConnection connect)
         {
-            SqlCommand com = new SqlCommand("SELECT * FROM CardOperationArchive WHERE numoprtn =" + _oprtninfo["numoprtn"], connect);
+            SqlCommand com = new SqlCommand("SELECT * FROM CardOperationArchive WHERE numoprtn = '" + _oprtninfo["numoprtn"]+"'", connect);
             var r = com.ExecuteScalar();
             if (r == null)
             {

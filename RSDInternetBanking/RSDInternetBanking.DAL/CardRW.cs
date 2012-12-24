@@ -8,17 +8,11 @@ namespace RSDInternetBanking.DAL
 {
     public static class CardRW
     {
-        public static string CreateCard(Dictionary<string, string> _userinfo)
+        public static string CreateCard(Dictionary<string, string> _userinfo, SqlConnection connect)
         {
-            SqlConnectionStringBuilder str = new SqlConnectionStringBuilder();
-            str.DataSource = "margarita-vaio\\sqlexpress";
-            str.InitialCatalog = "RSDDB";
-            str.IntegratedSecurity = true;
-            SqlConnection connect = new SqlConnection(str.ToString());
             try
             {
-                connect.Open();
-                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum =" + _userinfo["cnum"], connect);
+                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum = '" + _userinfo["cnum"] + "'", connect);
                 var r = com.ExecuteScalar();
                 if (r == null)
                 {
@@ -40,47 +34,24 @@ namespace RSDInternetBanking.DAL
                     return "this card number has already existed";
                 }
             }
-            finally 
-            { 
-                connect.Close(); 
-            }
-            
+            catch { }
+            return null;
 
         }
         
 
-        public static string DeleteCard(string _cnum)
+        public static string DeleteCard(string _cnum, SqlConnection connect)
         {
-            Dictionary<string, string> cardinfo = new Dictionary<string,string>();
-            SqlConnectionStringBuilder str = new SqlConnectionStringBuilder();
-            str.DataSource = "margarita-vaio\\sqlexpress";
-            str.InitialCatalog = "RSDDB";
-            str.IntegratedSecurity = true;
-            SqlConnection connect = new SqlConnection(str.ToString());
+            Dictionary<string, string> cardinfo = ReadByCNum(_cnum, connect);
             string rtrn = null;
             try
             {
-                connect.Open();
-                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum = " + _cnum, connect);
-                var card = com.ExecuteReader();
-                while (card.Read())
+                
+                rtrn = Archive.AddCard(cardinfo, connect);
+                if(rtrn != null)  // !null means something wrong is happened in Archive.AddCard()
                 {
-                    cardinfo.Add("cnum",((string)card["cnum"]).TrimEnd());
-                    cardinfo.Add("cdateexp", ((string)card["cdateexp"]).TrimEnd());
-                    cardinfo.Add("lname", ((string)card["lname"]).TrimEnd());
-                    cardinfo.Add("fname", ((string)card["fname"]).TrimEnd());
-                    cardinfo.Add("settleacc", ((string)card["settleacc"]).TrimEnd());
-                    cardinfo.Add("pID", ((string)card["pID"]).TrimEnd());
-                    cardinfo.Add("pasdateissue", ((string)card["pasdateissue"]).TrimEnd());
-                    cardinfo.Add("scrtcode", ((string)card["scrtcode"]).TrimEnd());
-                    cardinfo.Add("balancelimit", ((string)card["balancelimit"]).TrimEnd());
-                    rtrn = Archive.AddCard(cardinfo, connect);
-                    if(rtrn != null)  // !null means something wrong is happened in Archive.AddCard()
-                    {
-                        return rtrn;
-                    }
+                    return rtrn;
                 }
-                card.Close();
                 rtrn= CardOperationRW.MoveToArchive(_cnum, connect);
                 if (rtrn != null) //!null means something wrong is happened in CardOperationRW.MoveToArchive()
                 {
@@ -89,32 +60,50 @@ namespace RSDInternetBanking.DAL
 
 
             }
-            finally
+            catch
             {
-                connect.Close();
             }
             return rtrn;
         }
-        public static Dictionary<string, string> ReadByCNum(string _cnum)
+        public static Dictionary<string, string> ReadByCNum(string _cnum, SqlConnection connect)
         {
-            SqlConnectionStringBuilder str = new SqlConnectionStringBuilder();
-            str.DataSource = "margarita-vaio\\sqlexpress";
-            str.InitialCatalog = "RSDDB";
-            str.IntegratedSecurity = true;
-            SqlConnection connect = new SqlConnection(str.ToString());
+            Dictionary<string, string> cardinfo = new Dictionary<string, string>();
             try
             {
-                connect.Open();
+                
+                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum ='" + _cnum + "'", connect);
+                var card = com.ExecuteReader();
+
+                while (card.Read())
+                {
+                    cardinfo.Add("cnum", ((string)card["cnum"]).TrimEnd());
+                    cardinfo.Add("cdateexp", ((string)card["cdateexp"]).TrimEnd());
+                    cardinfo.Add("lname", ((string)card["lname"]).TrimEnd());
+                    cardinfo.Add("fname", ((string)card["fname"]).TrimEnd());
+                    cardinfo.Add("settleacc", ((string)card["settleacc"]).TrimEnd());
+                    cardinfo.Add("pID", ((string)card["pID"]).TrimEnd());
+                    cardinfo.Add("pasdateissue", ((string)card["pasdateissue"]).TrimEnd());
+                    cardinfo.Add("scrtcode", ((string)card["scrtcode"]).TrimEnd());
+                    cardinfo.Add("balancelimit", ((string)card["balancelimit"]).TrimEnd());
+                }
+                card.Close();
             }
-            finally
-            {
-                connect.Close();
-            }
-            return null;
+            catch { }
+            return cardinfo;
         }
-        public static Dictionary<string, string> ReadByName(string _partname)
+        //сделать поиск по личному номеру?! а не по фамлии
+        public static Dictionary<string, string> ReadByLastName(string _partname, SqlConnection connect) // return lastname+firstname - cardnumber
         {
-            return null;
+            SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE lname LIKE '%" + _partname + "%'", connect);
+            var card = com.ExecuteReader();
+            Dictionary<string, string> cardinfo = new Dictionary<string, string>();
+            while (card.Read())
+            {
+                string str = ((string)card["fname"]).TrimEnd() + " " + ((string)card["lname"]).TrimEnd();
+                cardinfo.Add(str, ((string)card["cnum"]).TrimEnd());
+            }
+            card.Close();
+            return cardinfo;
         }
     }
 }
