@@ -8,15 +8,39 @@ namespace RSDInternetBanking.DAL
 {
     public static class CardOperationRW
     {
-        public static void Conduct(Dictionary<string,string> _operation, SqlConnection connect)
+        public static string Conduct(Dictionary<string,string> _oprtninfo, SqlConnection connect)
         {
+            SqlCommand com = new SqlCommand("SELECT * FROM CardOperationa WHERE numoprtn = '" + _oprtninfo["numoprtn"] + "'", connect);
+            var r = com.ExecuteScalar();
+            if (r == null)
+            {
+                SqlCommand commandCreate = new SqlCommand("INSERT INTO CardOperationa(numoprtn,dateoprtn,action,region,placetrans,ISO4217trans,amntISO4217trans,amntISO4217c,cnum,status,adrsettleacc) Values(@numoprtn,@dateoprtn,@action,@region,@placetrans,@ISO4217trans,@amntISO4217trans,@amntISO4217c,@cnum,@status,@adrsettleacc)", connect);
+                commandCreate.Parameters.Add("@numoprtn", _oprtninfo["numoprtn"]);
+                commandCreate.Parameters.Add("@dateoprtn", _oprtninfo["dateoprtn"]);
+                commandCreate.Parameters.Add("@action", _oprtninfo["action"]);
+                commandCreate.Parameters.Add("@region", _oprtninfo["region"]);
+                commandCreate.Parameters.Add("@placetrans", _oprtninfo["placetrans"]);
+                commandCreate.Parameters.Add("@ISO4217trans", _oprtninfo["ISO4217trans"]);
+                commandCreate.Parameters.Add("@amntISO4217trans", _oprtninfo["amntISO4217trans"]);
+                commandCreate.Parameters.Add("@amntISO4217c", _oprtninfo["amntISO4217c"]);
+                commandCreate.Parameters.Add("@cnum", _oprtninfo["cnum"]);
+                commandCreate.Parameters.Add("@status", _oprtninfo["status"]);
+                commandCreate.Parameters.Add("@adrsettleacc", _oprtninfo["adrsettleacc"]);
+                commandCreate.ExecuteNonQuery();
+                
+                return null;
+            }
+            else
+            {
+                return "something wrong is happened in CardOperationRW.Conduct()";
+            }
         }
 
         //ДОПИСАТЬ
-        public static Dictionary<string, string> ReadHistoryLastMonth(string _cnum, SqlConnection connect)
+        public static Dictionary<string, string> ReadHistoryMonthly(string _cnum, string _dateFrom, string _dateTO, SqlConnection connect)
         {
             Dictionary<string, string> history = new Dictionary<string, string>();
-            SqlCommand com = new SqlCommand("SELECT * FROM CardOperations WHERE cnum = '" + _cnum+"' and dateoprtn >'", connect);  
+            SqlCommand com = new SqlCommand("SELECT * FROM CardOperations WHERE cnum = '" + _cnum+"' and dateoprtn >='"+_dateFrom+"' and dateoprtn<'"+_dateTO+"'", connect);  
             var card = com.ExecuteReader();
             while (card.Read())
             {
@@ -32,13 +56,16 @@ namespace RSDInternetBanking.DAL
                 history.Add("status", ((string)card["status"]).TrimEnd());
                 history.Add("adrsettleacc", ((string)card["adrsettleacc"]).TrimEnd());
             }
+            card.Close();
             return history; 
+
         }
         //а надо ли?
-        public static Dictionary<string, string> ReadHistoryAll(string _cnum, SqlConnection connect)
+/*        public static Dictionary<string, string> ReadHistoryAll(string _cnum, SqlConnection connect)
         {
             return null;
         }
+ */
         public static string MoveToArchive(string _cnum, SqlConnection connect)
         {
                 Dictionary<string, string> operationinfo = new Dictionary<string,string>();

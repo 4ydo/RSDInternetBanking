@@ -34,11 +34,6 @@ namespace RSDInternetBanking.DAL
             }
         }
 
-        public static double GetExchangeRate(string _ISOISO, SqlConnection connect)
-        {
-            return -1.0;
-        }
-
         public static Dictionary<string, double> GetExchangeRates(SqlConnection connect)
         {
             return null;

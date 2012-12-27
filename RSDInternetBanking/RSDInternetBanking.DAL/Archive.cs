@@ -19,6 +19,7 @@ namespace RSDInternetBanking.DAL
             var r = com.ExecuteScalar();
             if (r == null)
             {
+               
                 SqlCommand commandCreate = new SqlCommand("INSERT INTO CardInfoArchive(cnum,cdateexp,lname,fname,settleacc,pID,pasdateissue,scrtcode,balancelimit) Values(@cnum,@cdateexp,@lname,@fname,@settleacc,@pID,@pasdateissue,@scrtcode,@balancelimit)", connect);
                 commandCreate.Parameters.Add("@cnum", _cardinfo["cnum"]);
                 commandCreate.Parameters.Add("@cdateexp", _cardinfo["cdateexp"]);
@@ -45,7 +46,7 @@ namespace RSDInternetBanking.DAL
             var r = com.ExecuteScalar();
             if (r == null)
             {
-                SqlCommand commandCreate = new SqlCommand("INSERT INTO CardInfoArchive(numoprtn,dateoprtn,action,region,placetrans,ISO4217trans,amntISO4217trans,amntISO4217c,cnum,status,adrsettleacc) Values(@numoprtn,@dateoprtn,@action,@region,@placetrans,@ISO4217trans,@amntISO4217trans,@amntISO4217c,@cnum,@status,@adrsettleacc)", connect);
+                SqlCommand commandCreate = new SqlCommand("INSERT INTO CardOperationArchive(numoprtn,dateoprtn,action,region,placetrans,ISO4217trans,amntISO4217trans,amntISO4217c,cnum,status,adrsettleacc) Values(@numoprtn,@dateoprtn,@action,@region,@placetrans,@ISO4217trans,@amntISO4217trans,@amntISO4217c,@cnum,@status,@adrsettleacc)", connect);
                 commandCreate.Parameters.Add("@numoprtn", _oprtninfo["numoprtn"]);
                 commandCreate.Parameters.Add("@dateoprtn", _oprtninfo["dateoprtn"]);
                 commandCreate.Parameters.Add("@action", _oprtninfo["action"]);
