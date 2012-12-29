@@ -36,8 +36,11 @@ namespace RSDInternetBanking.DAL
             }
         }
 
-        //ДОПИСАТЬ
-        public static Dictionary<string, string> ReadHistoryMonthly(string _cnum, string _dateFrom, string _dateTO, SqlConnection connect)
+        public static void ChangeStatus();
+        public static void CancelOperation();
+
+
+        public static Dictionary<string, string> ReadHistory(string _cnum, string _dateFrom, string _dateTO, SqlConnection connect)
         {
             Dictionary<string, string> history = new Dictionary<string, string>();
             SqlCommand com = new SqlCommand("SELECT * FROM CardOperations WHERE cnum = '" + _cnum+"' and dateoprtn >='"+_dateFrom+"' and dateoprtn<'"+_dateTO+"'", connect);  

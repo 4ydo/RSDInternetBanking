@@ -105,5 +105,17 @@ namespace RSDInternetBanking.DAL
             card.Close();
             return cardinfo;
         }
+
+        public static string SetBalanceLimit(string _cnum, string _balancelimit, SqlConnection connect)
+        {
+                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum = '" + _cnum + "'", connect);
+                var r = com.ExecuteScalar();
+                if (r == null)
+                {
+                    return "Card doesn't exist";
+                }
+                SqlCommand setlimit = new SqlCommand("UPDATE CardInfo SET balancelimit ='" +_balancelimit+"'  WHERE cnum = '" + _cnum + "'", connect);
+                return null;
+        }
     }
 }

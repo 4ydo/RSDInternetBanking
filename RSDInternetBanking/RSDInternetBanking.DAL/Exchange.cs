@@ -34,9 +34,27 @@ namespace RSDInternetBanking.DAL
             }
         }
 
-        public static Dictionary<string, double> GetExchangeRates(SqlConnection connect)
+        public static List<Dictionary<string, string>> GetExchangeRates(SqlConnection connect)
         {
-            return null;
+            List<Dictionary<string, string>> allrates = new List<Dictionary<string, string>>();
+            try
+            {
+                
+                SqlCommand com = new SqlCommand("SELECT * FROM ExchangeRate", connect);
+                var card = com.ExecuteReader();
+
+                while (card.Read())
+                {
+                    Dictionary<string, string> rate = new Dictionary<string, string>();
+                    rate.Add("ISO4217from", ((string)card["ISO4217from"]).TrimEnd());
+                    rate.Add("ISO4217to", ((string)card["ISO4217to"]).TrimEnd());
+                    rate.Add("exchrate", ((string)card["exchrate"]).TrimEnd());
+                    allrates.Add(rate);
+                }
+                card.Close();
+            }
+            catch { }
+            return allrates;
         }
     }
 }

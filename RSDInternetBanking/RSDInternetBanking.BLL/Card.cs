@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RSDInternetBanking.DAL;
+using System.Data.SqlClient;
 
 namespace RSDInternetBanking.BLL
 {
@@ -31,7 +32,9 @@ namespace RSDInternetBanking.BLL
         public Card(string _cardnum)//возможно, сделать отсюда проверку логина и пароля, и только тогда считывание информации.
         {
             cardnum = _cardnum;
-            Dictionary<string, string> userinfo = CardRW.ReadByCNum(cardnum);
+            SqlConnection connect = Connection.Open();
+            Dictionary<string, string> userinfo = CardRW.ReadByCNum(cardnum,connect);
+            Connection.Close(connect);
             //распарсить все из userinfo
         }
     }

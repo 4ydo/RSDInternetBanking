@@ -8,10 +8,11 @@ namespace RSDInternetBanking.DAL
 {
     public static class Archive  
     {
-        public static Dictionary<string, string> GetCardInfo(SqlConnection connect)
+     /*   public static Dictionary<string, string> GetCardInfo(SqlConnection connect)
         {
             return null; 
         }
+      */ 
 
         public static string AddCard( Dictionary<string, string> _cardinfo, SqlConnection connect)
         {           
