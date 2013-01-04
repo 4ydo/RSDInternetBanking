@@ -10,7 +10,7 @@ namespace RSDInternetBanking.DAL
     {
         public static string Conduct(Dictionary<string,string> _oprtninfo, SqlConnection connect)
         {
-            SqlCommand com = new SqlCommand("SELECT * FROM CardOperationa WHERE numoprtn = '" + _oprtninfo["numoprtn"] + "'", connect);
+            SqlCommand com = new SqlCommand("SELECT * FROM CardOperations WHERE numoprtn = '" + _oprtninfo["numoprtn"] + "'", connect);
             var r = com.ExecuteScalar();
             if (r == null)
             {
@@ -36,8 +36,19 @@ namespace RSDInternetBanking.DAL
             }
         }
 
-        public static void ChangeStatus();
-        public static void CancelOperation();
+        public static string ChangeStatus(int _numoprtn, string _status, SqlConnection connect)
+        {
+            SqlCommand com = new SqlCommand("SELECT * FROM CardOperations WHERE numoprtn = '" + _numoprtn + "'", connect);
+            var r = com.ExecuteScalar();
+            if (r == null)
+            {
+                return "this operation doesn't exist";
+            }
+            SqlCommand commandRate = new SqlCommand("UPDATE CardOperations SET status = '" + _status + "' WHERE numoprtn = '" + _numoprtn+ "'", connect);
+            commandRate.ExecuteNonQuery();
+            return null;
+        }
+
 
 
         public static Dictionary<string, string> ReadHistory(string _cnum, string _dateFrom, string _dateTO, SqlConnection connect)

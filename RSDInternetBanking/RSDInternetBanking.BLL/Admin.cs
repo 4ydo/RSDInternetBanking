@@ -10,8 +10,24 @@ namespace RSDInternetBanking.BLL
         public void SetExchangeRate()
         {
         }
-        public void CreateNewCard(string _settleacc, string _fname, string _lname,string _pID,string _pasdateissue, string _scrtcode)
+
+        public string CreateCardNumber(Enums.CardType _type);
+        public void CreateNewCard(string _settleacc, string _fname, string _lname, string _type)
         {
+            Enums.CardType type = new Enums.CardType();
+            switch (_type)
+            {
+                case "Credit":
+                    type = Enums.CardType.Credit;
+                    break;
+                case "Debit":
+                    type = Enums.CardType.Debit;
+                    break;
+            }
+            string cnum = CreateCardNumber(type);
+            DateTime _dateexp = DateTime.Today.AddYears(4);
+            Card _card = new Card(_settleacc, 0, cnum, _dateexp, _lname, _fname);
+
         }
 
         //return number of control sum
