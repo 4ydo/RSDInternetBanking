@@ -6,21 +6,24 @@ using System.Data.SqlClient;
 
 namespace RSDInternetBanking.DAL
 {
-    public static class Connection
+    public class Connection
     {
-        public static SqlConnection Open()
+        public SqlConnection _connect;
+        public Connection()
+        {
+        }
+        public void Open()
         {
             SqlConnectionStringBuilder str = new SqlConnectionStringBuilder();
             str.DataSource = "margarita-vaio\\sqlexpress";
             str.InitialCatalog = "RSDDB";
             str.IntegratedSecurity = true;
-            SqlConnection connect = new SqlConnection(str.ToString());
-            connect.Open();
-            return connect;
+            _connect = new SqlConnection(str.ToString());
+            _connect.Open();
         }
-        public static void Close(SqlConnection connect)
+        public void Close()
         {
-            connect.Close();
+            _connect.Close();
         }
     }
 }
