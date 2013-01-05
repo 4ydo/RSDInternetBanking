@@ -13,6 +13,14 @@ namespace RSDInternetBanking.BLL
             Credit = 11
         }
 
+        public enum BankNumbers
+        {
+            BankID = 5654,
+            BranchOffice1 = 11,
+            BranchOffice2 = 12,
+            BranchOffice3 = 13
+        }
+
         public enum Сurrency
         {
             BYR = 974,

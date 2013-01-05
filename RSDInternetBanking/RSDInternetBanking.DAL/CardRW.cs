@@ -8,24 +8,24 @@ namespace RSDInternetBanking.DAL
 {
     public static class CardRW
     {
-        public static string CreateCard(Dictionary<string, string> _userinfo, SqlConnection connect)
+        public static string CreateCard(Dictionary<string, string> _cardinfo, SqlConnection connect)
         {
             try
             {
-                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum = '" + _userinfo["cnum"] + "'", connect);
+                SqlCommand com = new SqlCommand("SELECT * FROM CardInfo WHERE cnum = '" + _cardinfo["cnum"] + "'", connect);
                 var r = com.ExecuteScalar();
                 if (r == null)
                 {
                     SqlCommand commandCreate = new SqlCommand("INSERT INTO CardInfo(cnum,cdateexp,lname,fname,settleacc,pID,pasdateissue,scrtcode,balancelimit) Values(@cnum,@cdateexp,@lname,@fname,@settleacc,@pID,@pasdateissue,@scrtcode,@balancelimit)", connect);
-                    commandCreate.Parameters.Add("@cnum", _userinfo["cnum"]);
-                    commandCreate.Parameters.Add("@cdateexp", _userinfo["cdateexp"]);
-                    commandCreate.Parameters.Add("@lname", _userinfo["lname"]);
-                    commandCreate.Parameters.Add("@fname", _userinfo["fname"]);
-                    commandCreate.Parameters.Add("@settleacc", _userinfo["settleacc"]);
-                    commandCreate.Parameters.Add("@pID", _userinfo["pID"]);
-                    commandCreate.Parameters.Add("@pasdateissue", _userinfo["pasdateissue"]);
-                    commandCreate.Parameters.Add("@scrtcode", _userinfo["scrtcode"]);
-                    commandCreate.Parameters.Add("@balancelimit", _userinfo["balancelimit"]);
+                    commandCreate.Parameters.Add("@cnum", _cardinfo["cnum"]);
+                    commandCreate.Parameters.Add("@cdateexp", _cardinfo["cdateexp"]);
+                    commandCreate.Parameters.Add("@lname", _cardinfo["lname"]);
+                    commandCreate.Parameters.Add("@fname", _cardinfo["fname"]);
+                    commandCreate.Parameters.Add("@settleacc", _cardinfo["settleacc"]);
+                    commandCreate.Parameters.Add("@pID", _cardinfo["pID"]);
+                    commandCreate.Parameters.Add("@pasdateissue", _cardinfo["pasdateissue"]);
+                    commandCreate.Parameters.Add("@scrtcode", _cardinfo["scrtcode"]);
+                    commandCreate.Parameters.Add("@balancelimit", _cardinfo["balancelimit"]);
                     commandCreate.ExecuteNonQuery();
                     return null;
                 }
@@ -38,7 +38,19 @@ namespace RSDInternetBanking.DAL
             return null;
 
         }
-        
+
+        public static string GetLastCardNumber(SqlConnection connect)
+        {
+             SqlCommand com = new SqlCommand("SELECT * FROM CardInfo ORDER BY cnum", connect);
+             var card = com.ExecuteReader();
+
+             while (card.Read())
+             {
+                 return ((string)card["cnum"]).TrimEnd();
+             }
+            return "";
+
+        }
 
         public static string DeleteCard(string _cnum, SqlConnection connect)
         {

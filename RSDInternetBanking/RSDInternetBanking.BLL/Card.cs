@@ -16,6 +16,7 @@ namespace RSDInternetBanking.BLL
         public string lastname { get; private set; }
         public string firstname { get; private set; }
         public List<CardOperation> history { get; private set; }
+        public double balancelimit {get; private set;}
 
         public Card(string _settleacc, double _accbalance, string _cardnum, DateTime _dateexp, string lname, string fname)
         {
@@ -26,6 +27,16 @@ namespace RSDInternetBanking.BLL
             lastname = lname;
             firstname = fname;
             history = null;
+            int type = int.Parse(cardnum.Substring(7,8));
+            switch (type)
+            {
+                case (int)Enums.CardType.Credit:
+                    balancelimit = -100;
+                    break;
+                case (int)Enums.CardType.Debit:
+                    balancelimit = 0;
+                    break;
+            }
         }
         public void LoadHistory(List<CardOperation> _hist)
         {
@@ -51,5 +62,25 @@ namespace RSDInternetBanking.BLL
             connect.Close();
             //распарсить все из userinfo
         }
+
+        public void SaveCard()
+        {
+            Dictionary<string, string> cardinfo = new Dictionary<string, string>();
+            cardinfo.Add("cnum", cardnum);
+            cardinfo.Add("cdateexp", dateexp.ToString());
+            cardinfo.Add("lname",lastname);
+            cardinfo.Add("fname",firstname);
+            cardinfo.Add("settleacc",settleacc);
+            cardinfo.Add("pID","");
+            cardinfo.Add("pasdateissue","12-02-2030");
+            cardinfo.Add("scrtcode","013");
+            cardinfo.Add("balancelimit", balancelimit.ToString());
+            Connection connect = new Connection();
+            connect.Open();
+            CardRW.CreateCard(cardinfo, connect._connect);
+            connect.Close();
+        }
+
+
     }
 }
