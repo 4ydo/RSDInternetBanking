@@ -8,7 +8,7 @@ namespace RSDInternetBanking.DAL
 {
     public static class Loginization
     {
-        public static Dictionary<string,string>  UserLoginization(string _login, string _password, SqlConnection connect )
+        public static Dictionary<string,string>  UserLoginization(string _login, SqlConnection connect )
         { 
             Dictionary<string, string> logininfo = new Dictionary<string, string>();
             SqlCommand com = new SqlCommand("SELECT * FROM LoginInfo WHERE login ='" + _login + "'", connect);
@@ -16,8 +16,8 @@ namespace RSDInternetBanking.DAL
 
             while (loginreader.Read())
             {
-                //logininfo.Add("login", ((string)loginreader["login"]).TrimEnd());
-                //logininfo.Add("password", ((string)loginreader["password"]).TrimEnd());
+                logininfo.Add("login", ((string)loginreader["login"]).TrimEnd());
+                logininfo.Add("password", ((string)loginreader["password"]).TrimEnd());
                 logininfo.Add("cnum", ((string)loginreader["cnum"]).TrimEnd());
                 logininfo.Add("lgndateexp", ((string)loginreader["lgndateexp"]).TrimEnd());
             }
@@ -25,22 +25,22 @@ namespace RSDInternetBanking.DAL
             return logininfo;
         }
 
-        public static string AdminLoginization(string _login, string _password, SqlConnection connect)
+        public static Dictionary<string, string> AdminLoginization(string _login, SqlConnection connect)
         {//wrong-неверно,???? иначе - статус (admin, oprtr)
-          //  Dictionary<string, string> admininfo = new Dictionary<string, string>();
+            Dictionary<string, string> admininfo = new Dictionary<string, string>();
             SqlCommand com = new SqlCommand("SELECT * FROM AdminInfo WHERE login ='" + _login + "'", connect);
             var adminreader = com.ExecuteReader();
-            string statusinfo;
-           /* while (adminreader.Read())
+            //string statusinfo;
+            while (adminreader.Read())
             {
                 admininfo.Add("login", ((string)adminreader["login"]).TrimEnd());
                 admininfo.Add("password", ((string)adminreader["password"]).TrimEnd());
                 admininfo.Add("status", ((string)adminreader["status"]).TrimEnd());
             }
-            */
-            statusinfo = ((string)adminreader["status"]).TrimEnd();
+            
+           // statusinfo = ((string)adminreader["status"]).TrimEnd();
             adminreader.Close();
-            return statusinfo;
+            return admininfo;
         }
 
         public static string CreateUser(string _login, string _password, string _cnum, string _lgndateexp, SqlConnection connect)

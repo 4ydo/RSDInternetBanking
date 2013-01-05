@@ -12,6 +12,7 @@ namespace RSDInternetBanking.BLL
         public double rate;
         public ExchangeRateNode()
         {
+
         }
         public ExchangeRateNode(string _ISO4217from, string _ISO4217to, double _rate)
         {
